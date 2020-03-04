@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from eventex.subscriptions.admin import SubscriptionModelAdmin, Subscription, admin
 
 
-class SubscrioptionModelAdmin(TestCase):
+class SubscriptionModelAdminTest(TestCase):
 	def setUp(self):
 		Subscription.objects.create(name='Nicolai Hygino', cpf='01234567890',
 									email='nicolaihygino2000@gmail.com', phone='21-982585168')

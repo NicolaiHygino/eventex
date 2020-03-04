@@ -11,7 +11,7 @@ class SubscriptionModelAdmin(admin.ModelAdmin):
 					 'created_at')
 	list_filter = ('paid', 'created_at')
 
-	actions = ['mark_as_paid']
+	actions = ['mark_as_paid', 'desmark_paid']
 
 	def subscribed_today(self, obj):
 		return obj.created_at == now().date()
@@ -30,5 +30,17 @@ class SubscriptionModelAdmin(admin.ModelAdmin):
 		self.message_user(request, msg.format(count))
 
 	mark_as_paid.short_description = 'Marcar como pago'
+
+	def desmark_paid(self, request, queryset):
+		count = queryset.update(paid=False)
+
+		if count == 1:
+			msg = '{} inscrição foi desmarcada como paga.'
+		else:
+			msg = '{} inscrições foram desmascadas como pagas.'
+
+		self.message_user(request, msg.format(count))
+
+	desmark_paid.short_description = 'Desmarcar como pago'
 
 admin.site.register(Subscription, SubscriptionModelAdmin)
