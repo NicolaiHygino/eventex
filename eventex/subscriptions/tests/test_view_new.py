@@ -9,17 +9,14 @@ class SubscriptionsNewGet(TestCase):
 	def setUp(self):
 		self.resp = self.client.get(r('subscriptions:new'))
 
-
 	def test_get(self):
 		"""Get /inscricao/ must returns status code 200"""
 
 		self.assertEqual(200, self.resp.status_code)
 
-
 	def test_template(self):
 		"""Must use subscriptions/subscription_form.html"""
 		self.assertTemplateUsed(self.resp, 'subscriptions/subscription_form.html')
-
 
 	def test_html(self):
 		"""Html must countain input tags"""
@@ -33,11 +30,9 @@ class SubscriptionsNewGet(TestCase):
 			with self.subTest():
 				self.assertContains(self.resp, text, count)
 
-
 	def test_csrf(self):
 		"""Html must countain csrf"""
 		self.assertContains(self.resp, 'csrfmiddlewaretoken')
-
 
 	def test_has_form(self):
 		"""Content must have subscriprion form"""
@@ -51,15 +46,12 @@ class SubscriptionsNewPostValid(TestCase):
 					email='nicolaihygino2000@gmail.com', phone='21-98258-5168')
 		self.resp = self.client.post(r('subscriptions:new'), data)
 
-
 	def test_post(self):
 		"""valid POST should redirect to /inscricao/1/"""
 		self.assertRedirects(self.resp, r('subscriptions:detail', 1))
-
 	
 	def test_send_subscribe_email(self):
 		self.assertEqual(1, len(mail.outbox))
-
 
 	def test_save_subscription(self):
 		self.assertTrue(Subscription.objects.exists())
@@ -69,25 +61,20 @@ class SubscriptionsNewPostInvalid(TestCase):
 	def setUp(self):
 		self.resp = self.client.post(r('subscriptions:new'), {})
 
-
 	def test_post(self):
 		"""Invalid POST shoult not redirect"""
 		self.assertEqual(200, self.resp.status_code)
 
-
 	def test_template(self):
 		self.assertTemplateUsed(self.resp, 'subscriptions/subscription_form.html')
-
 
 	def test_has_form(self):
 		form = self.resp.context['form']
 		self.assertIsInstance(form, SubscriptionForm)
 
-
 	def test_form_has_errors(self):
 		form = self.resp.context['form']
 		self.assertTrue(form.errors)
-
 
 	def test_dont_save_subscription(self):
 		self.assertFalse(Subscription.objects.exists())

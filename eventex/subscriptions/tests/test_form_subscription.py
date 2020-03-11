@@ -18,7 +18,7 @@ class SubscriptionFormTest(TestCase):
 		"""CPF must have 11 digits"""
 		form = self.make_validated_form(cpf='1234')
 		self.assertFormErrorCode(form, 'cpf', 'length')
-	
+
 	def test_email_is_optional(self):
 		"""Email is optional"""
 		form = self.make_validated_form(email='')
@@ -38,6 +38,12 @@ class SubscriptionFormTest(TestCase):
 		"""Name Must Be Capitalized"""
 		form = self.make_validated_form(name='NICOLAI hygino')
 		self.assertEqual('Nicolai Hygino', form.cleaned_data['name'])
+
+	def test_phone_is_digit(self):
+		"""Phone must only accepts digits"""
+		form = self.make_validated_form(phone='ABCD56789')
+		#self.assertListEqual(['phone'], list(form.errors))
+		self.assertFormErrorCode(form, 'phone', 'phone-digits')
 
 	def assertFormErrorCode(self, form, field, code):
 		errors = form.errors.as_data()
