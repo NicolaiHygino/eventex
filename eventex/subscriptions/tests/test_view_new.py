@@ -1,3 +1,4 @@
+import hashlib
 from django.core import mail
 from django.test import TestCase
 from django.shortcuts import resolve_url as r
@@ -42,13 +43,14 @@ class SubscriptionsNewGet(TestCase):
 
 class SubscriptionsNewPostValid(TestCase):
 	def setUp(self):
-		data = dict(name='Nicolai Hygino', cpf='12345678901',
+		self.data = dict(name='Nicolai Hygino', cpf='12345678901',
 					email='nicolaihygino2000@gmail.com', phone='21-98258-5168')
-		self.resp = self.client.post(r('subscriptions:new'), data)
+		self.resp = self.client.post(r('subscriptions:new'), self.data)
 
 	def test_post(self):
 		"""valid POST should redirect to /inscricao/1/"""
-		self.assertRedirects(self.resp, r('subscriptions:detail', 1))
+		hash_object = hashlib.md5(self.data['name'].encode())
+		self.assertRedirects(self.resp, r('subscriptions:detail', hash_object.hexdigest()))
 	
 	def test_send_subscribe_email(self):
 		self.assertEqual(1, len(mail.outbox))
