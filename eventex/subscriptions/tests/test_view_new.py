@@ -49,8 +49,10 @@ class SubscriptionsNewPostValid(TestCase):
 
 	def test_post(self):
 		"""valid POST should redirect to /inscricao/1/"""
-		hash_object = hashlib.md5(self.data['name'].encode())
-		self.assertRedirects(self.resp, r('subscriptions:detail', hash_object.hexdigest()))
+		hash_name = hashlib.md5(self.data['name'].encode()).hexdigest()
+		hash_cpf = hashlib.md5(self.data['cpf'].encode()).hexdigest()
+		hash_url = ''.join([hash_name, hash_cpf])
+		self.assertRedirects(self.resp, r('subscriptions:detail', hash_url))
 	
 	def test_send_subscribe_email(self):
 		self.assertEqual(1, len(mail.outbox))
@@ -80,6 +82,7 @@ class SubscriptionsNewPostInvalid(TestCase):
 
 	def test_dont_save_subscription(self):
 		self.assertFalse(Subscription.objects.exists())
+
 
 class TemplateRegressionTest(TestCase):
 	def test_template_has_non_field_errors(self):

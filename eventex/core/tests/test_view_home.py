@@ -16,3 +16,4 @@ class HomeTest(TestCase):
 	def test_subscription_link(self):
 		expected = 'href="{}"'.format(r('subscriptions:new'))
 		self.assertContains(self.response, expected)
+		

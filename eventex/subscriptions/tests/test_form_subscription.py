@@ -4,7 +4,7 @@ from eventex.subscriptions.forms import SubscriptionForm
 
 class SubscriptionFormTest(TestCase):
 	def test_form_has_fields(self):
-		"""Form must gave 4 fields"""
+		"""Form must have 4 fields"""
 		form = SubscriptionForm()
 		expected = ['name', 'cpf', 'email', 'phone']
 		self.assertSequenceEqual(expected, list(form.fields))

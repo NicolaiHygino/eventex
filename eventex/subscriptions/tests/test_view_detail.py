@@ -6,12 +6,15 @@ from eventex.subscriptions.models import Subscription
 
 class SubscriptionDetailGet(TestCase):
 	def setUp(self):
-		email = 'nicolaihygino2000@gmail.com'
-		hash_url = hashlib.md5(email.encode()).hexdigest()
+		name = 'Nicolai Hygino'
+		cpf = '12345678901'
+		hash_name = hashlib.md5(name.encode()).hexdigest()
+		hash_cpf = hashlib.md5(cpf.encode()).hexdigest()
+		hash_url = ''.join([hash_name, hash_cpf])
 		self.obj = Subscription.objects.create(
-			name='Nicolai Hygino',
-			cpf='12345678901',
-			email=email,
+			name=name,
+			cpf=cpf,
+			email='nicolaihygino2000@gmail.com',
 			phone='21-982585168',
 			hash_url=hash_url
 		)

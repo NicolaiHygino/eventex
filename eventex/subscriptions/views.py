@@ -1,12 +1,14 @@
-import hashlib
 from django.conf import settings
 from django.contrib import messages
 from django.core import mail
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, resolve_url as r
 from django.template.loader import render_to_string
+
 from eventex.subscriptions.forms import SubscriptionForm
 from eventex.subscriptions.models import Subscription
+
+import hashlib
 
 
 def new(request):
@@ -28,8 +30,12 @@ def create(request):
 		return render(request, 'subscriptions/subscription_form.html', 
 					  {'form': form})
 
-	subscription = Subscription.objects.create(**form.cleaned_data)
-	subscription.hash_url = hashlib.md5((subscription.name.encode())).hexdigest()
+	subscription = form.save()
+	
+	hash_name = hashlib.md5(subscription.name.encode()).hexdigest()
+	hash_cpf = hashlib.md5(subscription.cpf.encode()).hexdigest()
+	hash_url = ''.join([hash_name, hash_cpf])
+	subscription.hash_url = hash_url
 	subscription.save()
 
 	# Send subscription email
